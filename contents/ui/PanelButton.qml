@@ -8,8 +8,12 @@ MouseArea {
     id: button
 
     property alias iconName: buttonIcon.source
-    property alias iconFallback: buttonIcon.fallback
     property real iconSizeRatio: 0.6
+    // Optional item drawn instead of the theme icon (e.g. a custom glyph)
+    property Component customContent: null
+
+    readonly property color contentColor: pressed ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
+    readonly property real contentSize: Math.min(width, height) * iconSizeRatio
     property bool autoRepeat: false
 
     readonly property int holdInitialDelayMs: 400
@@ -82,10 +86,17 @@ MouseArea {
     Kirigami.Icon {
         id: buttonIcon
 
+        visible: button.customContent === null
         anchors.centerIn: parent
-        width: Math.min(parent.width, parent.height) * button.iconSizeRatio
+        width: button.contentSize
         height: width
-        color: button.pressed ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
+        color: button.contentColor
         isMask: true
+    }
+
+    Loader {
+        anchors.centerIn: parent
+        active: button.customContent !== null
+        sourceComponent: button.customContent
     }
 }

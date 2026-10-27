@@ -93,19 +93,27 @@ PlasmoidItem {
             }
 
             PanelButton {
+                id: centerButton
+
                 // Full mode: fixed size along the panel, the arrows take the rest.
                 // Compact mode: the only cell, filling the whole widget.
                 Layout.preferredWidth: root.isVerticalPanel ? -1 : wheelArea.centerCellLength * root.centerCellAspectRatio
                 Layout.preferredHeight: root.isVerticalPanel ? wheelArea.centerCellLength / root.centerCellAspectRatio : -1
                 Layout.fillWidth: root.isVerticalPanel || root.isCompactMode
                 Layout.fillHeight: !root.isVerticalPanel || root.isCompactMode
-                iconName: root.isCompactMode ? compactIconName() : "media-record"
-                iconFallback: "view-split-left-right"
-                iconSizeRatio: root.isCompactMode ? 0.6 : 0.35
+                iconName: "media-record"
+                iconSizeRatio: root.isCompactMode ? 0.75 : 0.35
+                customContent: root.isCompactMode ? compactGlyphComponent : null
                 onActionRequested: karousel.centerFocusedWindow()
 
-                function compactIconName() {
-                    return root.isVerticalPanel ? "transform-move-vertical" : "transform-move-horizontal"
+                Component {
+                    id: compactGlyphComponent
+
+                    CompactGlyph {
+                        width: centerButton.contentSize
+                        height: width * heightToWidthRatio
+                        color: centerButton.contentColor
+                    }
                 }
             }
 
