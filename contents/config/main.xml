@@ -12,5 +12,15 @@
         <entry name="invertWheelDirection" type="Bool">
             <default>false</default>
         </entry>
+        <entry name="widgetLengthPercent" type="Int">
+            <default>100</default>
+            <min>25</min>
+            <max>400</max>
+        </entry>
+        <entry name="widgetThicknessPercent" type="Int">
+            <default>100</default>
+            <min>30</min>
+            <max>100</max>
+        </entry>
     </group>
 </kcfg>

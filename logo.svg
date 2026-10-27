@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#1b1e20"/>
+
+  <!-- Faint window columns suggesting a horizontally scrolling grid -->
+  <g fill="#ffffff" fill-opacity="0.07">
+    <rect x="-40" y="56" width="120" height="40" rx="10"/>
+    <rect x="96" y="56" width="152" height="40" rx="10"/>
+    <rect x="264" y="56" width="152" height="40" rx="10"/>
+    <rect x="432" y="56" width="120" height="40" rx="10"/>
+    <rect x="-40" y="416" width="120" height="40" rx="10"/>
+    <rect x="96" y="416" width="152" height="40" rx="10"/>
+    <rect x="264" y="416" width="152" height="40" rx="10"/>
+    <rect x="432" y="416" width="120" height="40" rx="10"/>
+  </g>
+
+  <!-- Pager-like cells: left arrow, center dot, right arrow -->
+  <rect x="50" y="136" width="140" height="240" rx="18" fill="#31363b" stroke="#ffffff" stroke-opacity="0.18" stroke-width="4"/>
+  <rect x="204" y="136" width="104" height="240" rx="18" fill="#c42b7c"/>
+  <rect x="322" y="136" width="140" height="240" rx="18" fill="#31363b" stroke="#ffffff" stroke-opacity="0.18" stroke-width="4"/>
+
+  <g fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="138,212 98,256 138,300"/>
+    <polyline points="374,212 414,256 374,300"/>
+  </g>
+  <circle cx="256" cy="256" r="26" fill="#ffffff"/>
+</svg>

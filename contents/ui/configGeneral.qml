@@ -12,6 +12,10 @@ KCM.SimpleKCM {
     property real cfg_scrollSpeedMultiplierDefault
     property alias cfg_invertWheelDirection: invertWheelCheckBox.checked
     property bool cfg_invertWheelDirectionDefault
+    property alias cfg_widgetLengthPercent: lengthSpinBox.value
+    property int cfg_widgetLengthPercentDefault
+    property alias cfg_widgetThicknessPercent: thicknessSpinBox.value
+    property int cfg_widgetThicknessPercentDefault
 
     // SpinBox only handles integers: values are stored scaled by this factor
     readonly property int decimalScale: 10
@@ -65,6 +69,36 @@ KCM.SimpleKCM {
             wrapMode: Text.Wrap
             font: Kirigami.Theme.smallFont
             text: i18n("Default: wheel down scrolls left, wheel up scrolls right. The arrow buttons are not affected.")
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18n("Size")
+        }
+
+        PercentSpinBox {
+            id: lengthSpinBox
+
+            Kirigami.FormData.label: i18n("Length:")
+            from: 25
+            to: 400
+            stepSize: 5
+        }
+
+        PercentSpinBox {
+            id: thicknessSpinBox
+
+            Kirigami.FormData.label: i18n("Thickness:")
+            from: 30
+            to: 100
+            stepSize: 5
+        }
+
+        QQC2.Label {
+            Layout.fillWidth: true
+            wrapMode: Text.Wrap
+            font: Kirigami.Theme.smallFont
+            text: i18n("Length is measured along the panel, thickness across it (as a share of the panel thickness). The mouse wheel works on the whole widget area.")
         }
     }
 }

@@ -11,6 +11,8 @@ A KDE Plasma 6 panel widget to scroll the [Karousel](https://github.com/peterfaj
 **Settings:** scroll speed multiplier (default `1.0`, range `0.1` to `10`). It sets how many Karousel
 scroll steps are triggered per wheel notch or per click. The size of a single step is Karousel's own
 "manual scroll step" setting. The mouse wheel direction can be inverted (arrow buttons are not affected).
+The widget length (along the panel, 25% to 400%) and thickness (across the panel, 30% to 100%) are
+configurable.
 
 ## Requirements
 

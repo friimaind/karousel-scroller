@@ -12,6 +12,8 @@ PlasmoidItem {
     readonly property int stepsPerClick: Math.max(1, Math.round(speedMultiplier))
     // By default wheel up scrolls right; inverting flips the sign of the wheel delta
     readonly property int wheelDirectionSign: Plasmoid.configuration.invertWheelDirection ? -1 : 1
+    readonly property real lengthScale: Plasmoid.configuration.widgetLengthPercent / 100
+    readonly property real thicknessScale: Plasmoid.configuration.widgetThicknessPercent / 100
     readonly property real arrowCellAspectRatio: 1.6
     readonly property real centerCellAspectRatio: 1.0
     readonly property int cellSpacing: 2
@@ -47,16 +49,25 @@ PlasmoidItem {
     fullRepresentation: MouseArea {
         id: wheelArea
 
+        readonly property real panelThickness: root.isVerticalPanel ? width : height
+        readonly property real barThickness: panelThickness * root.thicknessScale
+        readonly property real lengthRatio: root.isVerticalPanel ? root.verticalLengthRatio : root.horizontalLengthRatio
+        readonly property real preferredLength: barThickness * lengthRatio * root.lengthScale + root.totalSpacing
+        // The center cell stays square when enlarging and shrinks together with the arrows when reducing
+        readonly property real centerCellLength: barThickness * Math.min(1, root.lengthScale)
+
         // Only listens to the wheel: clicks are handled by the buttons
         acceptedButtons: Qt.NoButton
 
-        Layout.preferredWidth: root.isVerticalPanel ? -1 : height * root.horizontalLengthRatio + root.totalSpacing
-        Layout.preferredHeight: root.isVerticalPanel ? width * root.verticalLengthRatio + root.totalSpacing : -1
+        Layout.preferredWidth: root.isVerticalPanel ? -1 : preferredLength
+        Layout.preferredHeight: root.isVerticalPanel ? preferredLength : -1
 
         onWheel: wheel => wheelAccumulator.addAngleDelta(wheel.angleDelta.y * root.wheelDirectionSign)
 
         GridLayout {
-            anchors.fill: parent
+            anchors.centerIn: parent
+            width: root.isVerticalPanel ? wheelArea.barThickness : parent.width
+            height: root.isVerticalPanel ? parent.height : wheelArea.barThickness
             columns: root.isVerticalPanel ? 1 : root.cellCount
             rowSpacing: root.cellSpacing
             columnSpacing: root.cellSpacing
@@ -71,8 +82,8 @@ PlasmoidItem {
 
             PanelButton {
                 // Fixed size along the panel direction, the arrows take the rest
-                Layout.preferredWidth: root.isVerticalPanel ? -1 : height * root.centerCellAspectRatio
-                Layout.preferredHeight: root.isVerticalPanel ? width / root.centerCellAspectRatio : -1
+                Layout.preferredWidth: root.isVerticalPanel ? -1 : wheelArea.centerCellLength * root.centerCellAspectRatio
+                Layout.preferredHeight: root.isVerticalPanel ? wheelArea.centerCellLength / root.centerCellAspectRatio : -1
                 Layout.fillWidth: root.isVerticalPanel
                 Layout.fillHeight: !root.isVerticalPanel
                 iconName: "media-record"
