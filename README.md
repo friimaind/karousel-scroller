@@ -1,22 +1,68 @@
 # Karousel Scroller
 
-Plasma 6 panel widget that scrolls the Karousel grid left/right.
+A KDE Plasma 6 panel widget to scroll the [Karousel](https://github.com/peterfajdiga/karousel) tiling grid, Pager style.
 
-- Click left/right arrow: scroll left/right (hold to keep scrolling)
-- Click center dot: center the focused window (`karousel-grid-scroll-focused`)
-- Mouse wheel down: scroll left, wheel up: scroll right
-- Settings: scroll speed multiplier (default 1.0, range 0.1 to 10)
+| Control | Action |
+| --- | --- |
+| Left / right arrow click | Scroll left / right (hold to keep scrolling) |
+| Center dot click | Center the focused window |
+| Mouse wheel down / up | Scroll left / right |
 
-It invokes Karousel's KWin shortcuts `karousel-grid-scroll-left` / `karousel-grid-scroll-right`
-via D-Bus (`org.kde.kglobalaccel`). Step size is Karousel's "manual scroll step" setting.
+**Settings:** scroll speed multiplier (default `1.0`, range `0.1` to `10`). It sets how many Karousel
+scroll steps are triggered per wheel notch or per click. The size of a single step is Karousel's own
+"manual scroll step" setting. The mouse wheel direction can be inverted (arrow buttons are not affected).
 
-## Install / update
+## Requirements
 
-    kpackagetool6 -t Plasma/Applet -i karousel-scroller   # first install
-    kpackagetool6 -t Plasma/Applet -u karousel-scroller   # update
-    systemctl --user restart plasma-plasmashell           # reload after update
+- KDE Plasma 6
+- [Karousel](https://github.com/peterfajdiga/karousel) installed and enabled as a KWin script
 
-## Test the D-Bus call manually
+## Installation
+
+**From the KDE Store:** right click on the panel > *Add Widgets* > *Get New Widgets*, search for
+"Karousel Scroller".
+
+**From a release:** download the `.plasmoid` file from the
+[releases page](https://github.com/friimaind/karousel-scroller/releases), then:
+
+    kpackagetool6 -t Plasma/Applet -i karousel-scroller-<version>.plasmoid
+
+**From source:**
+
+    git clone https://github.com/friimaind/karousel-scroller.git
+    kpackagetool6 -t Plasma/Applet -i karousel-scroller
+
+## How it works
+
+The widget invokes Karousel's KWin global shortcuts over D-Bus (`org.kde.kglobalaccel`):
+
+- `karousel-grid-scroll-left`
+- `karousel-grid-scroll-right`
+- `karousel-grid-scroll-focused`
+
+If the widget does nothing, check that Karousel responds to the same call:
 
     dbus-send --session --type=method_call --dest=org.kde.kglobalaccel /component/kwin \
       org.kde.kglobalaccel.Component.invokeShortcut string:karousel-grid-scroll-right
+
+## Development
+
+Update an installed copy after changing the code:
+
+    kpackagetool6 -t Plasma/Applet -u .
+    systemctl --user restart plasma-plasmashell
+
+Run it in a standalone window to see QML errors:
+
+    plasmawindowed friimaind.karouselscroller
+
+## Releasing
+
+1. Bump `KPlugin.Version` in `metadata.json`.
+2. Build the package: `./scripts/build-plasmoid.sh` (output in `dist/`).
+3. Create a GitHub release and attach the `.plasmoid` file.
+4. Upload the same `.plasmoid` to the KDE Store product page.
+
+## License
+
+[GPL-3.0](LICENSE)

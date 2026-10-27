@@ -9,5 +9,8 @@
             <min>0.1</min>
             <max>10.0</max>
         </entry>
+        <entry name="invertWheelDirection" type="Bool">
+            <default>false</default>
+        </entry>
     </group>
 </kcfg>

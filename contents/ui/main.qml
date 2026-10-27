@@ -10,6 +10,8 @@ PlasmoidItem {
     readonly property bool isVerticalPanel: Plasmoid.formFactor === PlasmaCore.Types.Vertical
     readonly property real speedMultiplier: Plasmoid.configuration.scrollSpeedMultiplier
     readonly property int stepsPerClick: Math.max(1, Math.round(speedMultiplier))
+    // By default wheel up scrolls right; inverting flips the sign of the wheel delta
+    readonly property int wheelDirectionSign: Plasmoid.configuration.invertWheelDirection ? -1 : 1
     readonly property real arrowCellAspectRatio: 1.6
     readonly property real centerCellAspectRatio: 1.0
     readonly property int cellSpacing: 2
@@ -51,7 +53,7 @@ PlasmoidItem {
         Layout.preferredWidth: root.isVerticalPanel ? -1 : height * root.horizontalLengthRatio + root.totalSpacing
         Layout.preferredHeight: root.isVerticalPanel ? width * root.verticalLengthRatio + root.totalSpacing : -1
 
-        onWheel: wheel => wheelAccumulator.addAngleDelta(wheel.angleDelta.y)
+        onWheel: wheel => wheelAccumulator.addAngleDelta(wheel.angleDelta.y * root.wheelDirectionSign)
 
         GridLayout {
             anchors.fill: parent
