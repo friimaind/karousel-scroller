@@ -12,6 +12,8 @@ KCM.SimpleKCM {
     property real cfg_scrollSpeedMultiplierDefault
     property alias cfg_invertWheelDirection: invertWheelCheckBox.checked
     property bool cfg_invertWheelDirectionDefault
+    property alias cfg_compactMode: compactModeCheckBox.checked
+    property bool cfg_compactModeDefault
     property alias cfg_widgetLengthPercent: lengthSpinBox.value
     property int cfg_widgetLengthPercentDefault
     property alias cfg_widgetThicknessPercent: thicknessSpinBox.value
@@ -74,6 +76,20 @@ KCM.SimpleKCM {
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
             Kirigami.FormData.label: i18n("Size")
+        }
+
+        QQC2.CheckBox {
+            id: compactModeCheckBox
+
+            Kirigami.FormData.label: i18n("Layout:")
+            text: i18n("Compact mode (single icon)")
+        }
+
+        QQC2.Label {
+            Layout.fillWidth: true
+            wrapMode: Text.Wrap
+            font: Kirigami.Theme.smallFont
+            text: i18n("Shows a single button: the mouse wheel scrolls, a click centers the focused window.")
         }
 
         PercentSpinBox {

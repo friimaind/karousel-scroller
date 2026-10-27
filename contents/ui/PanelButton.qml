@@ -8,6 +8,7 @@ MouseArea {
     id: button
 
     property alias iconName: buttonIcon.source
+    property alias iconFallback: buttonIcon.fallback
     property real iconSizeRatio: 0.6
     property bool autoRepeat: false
 

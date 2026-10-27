@@ -8,24 +8,36 @@ PlasmoidItem {
     id: root
 
     readonly property bool isVerticalPanel: Plasmoid.formFactor === PlasmaCore.Types.Vertical
+    readonly property bool isCompactMode: Plasmoid.configuration.compactMode
     readonly property real speedMultiplier: Plasmoid.configuration.scrollSpeedMultiplier
     readonly property int stepsPerClick: Math.max(1, Math.round(speedMultiplier))
     // By default wheel up scrolls right; inverting flips the sign of the wheel delta
     readonly property int wheelDirectionSign: Plasmoid.configuration.invertWheelDirection ? -1 : 1
     readonly property real lengthScale: Plasmoid.configuration.widgetLengthPercent / 100
     readonly property real thicknessScale: Plasmoid.configuration.widgetThicknessPercent / 100
+
     readonly property real arrowCellAspectRatio: 1.6
     readonly property real centerCellAspectRatio: 1.0
     readonly property int cellSpacing: 2
-    readonly property int cellCount: 3
-    // Widget length relative to the panel thickness, for horizontal and vertical panels
-    readonly property real horizontalLengthRatio: 2 * arrowCellAspectRatio + centerCellAspectRatio
-    readonly property real verticalLengthRatio: 2 / arrowCellAspectRatio + 1 / centerCellAspectRatio
-    readonly property real totalSpacing: (cellCount - 1) * cellSpacing
+    readonly property int visibleCellCount: isCompactMode ? 1 : 3
+    readonly property real totalSpacing: (visibleCellCount - 1) * cellSpacing
 
     preferredRepresentation: fullRepresentation
     toolTipMainText: i18n("Karousel Scroller")
-    toolTipSubText: i18n("Arrows or mouse wheel: scroll. Dot: center the focused window")
+    toolTipSubText: isCompactMode
+        ? i18n("Mouse wheel: scroll. Click: center the focused window")
+        : i18n("Arrows or mouse wheel: scroll. Dot: center the focused window")
+
+    // Widget length relative to its thickness, along the panel direction
+    function lengthToThicknessRatio() {
+        if (isCompactMode) {
+            return isVerticalPanel ? 1 / centerCellAspectRatio : centerCellAspectRatio
+        }
+        if (isVerticalPanel) {
+            return 2 / arrowCellAspectRatio + 1 / centerCellAspectRatio
+        }
+        return 2 * arrowCellAspectRatio + centerCellAspectRatio
+    }
 
     function scrollByWheelSteps(steps) {
         if (steps > 0) {
@@ -51,9 +63,8 @@ PlasmoidItem {
 
         readonly property real panelThickness: root.isVerticalPanel ? width : height
         readonly property real barThickness: panelThickness * root.thicknessScale
-        readonly property real lengthRatio: root.isVerticalPanel ? root.verticalLengthRatio : root.horizontalLengthRatio
-        readonly property real preferredLength: barThickness * lengthRatio * root.lengthScale + root.totalSpacing
-        // The center cell stays square when enlarging and shrinks together with the arrows when reducing
+        readonly property real preferredLength: barThickness * root.lengthToThicknessRatio() * root.lengthScale + root.totalSpacing
+        // In full mode the center cell stays square when enlarging and shrinks with the arrows when reducing
         readonly property real centerCellLength: barThickness * Math.min(1, root.lengthScale)
 
         // Only listens to the wheel: clicks are handled by the buttons
@@ -68,11 +79,12 @@ PlasmoidItem {
             anchors.centerIn: parent
             width: root.isVerticalPanel ? wheelArea.barThickness : parent.width
             height: root.isVerticalPanel ? parent.height : wheelArea.barThickness
-            columns: root.isVerticalPanel ? 1 : root.cellCount
+            columns: root.isVerticalPanel ? 1 : root.visibleCellCount
             rowSpacing: root.cellSpacing
             columnSpacing: root.cellSpacing
 
             PanelButton {
+                visible: !root.isCompactMode
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 iconName: root.isVerticalPanel ? "go-up" : "go-previous"
@@ -81,17 +93,24 @@ PlasmoidItem {
             }
 
             PanelButton {
-                // Fixed size along the panel direction, the arrows take the rest
+                // Full mode: fixed size along the panel, the arrows take the rest.
+                // Compact mode: the only cell, filling the whole widget.
                 Layout.preferredWidth: root.isVerticalPanel ? -1 : wheelArea.centerCellLength * root.centerCellAspectRatio
                 Layout.preferredHeight: root.isVerticalPanel ? wheelArea.centerCellLength / root.centerCellAspectRatio : -1
-                Layout.fillWidth: root.isVerticalPanel
-                Layout.fillHeight: !root.isVerticalPanel
-                iconName: "media-record"
-                iconSizeRatio: 0.35
+                Layout.fillWidth: root.isVerticalPanel || root.isCompactMode
+                Layout.fillHeight: !root.isVerticalPanel || root.isCompactMode
+                iconName: root.isCompactMode ? compactIconName() : "media-record"
+                iconFallback: "view-split-left-right"
+                iconSizeRatio: root.isCompactMode ? 0.6 : 0.35
                 onActionRequested: karousel.centerFocusedWindow()
+
+                function compactIconName() {
+                    return root.isVerticalPanel ? "transform-move-vertical" : "transform-move-horizontal"
+                }
             }
 
             PanelButton {
+                visible: !root.isCompactMode
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 iconName: root.isVerticalPanel ? "go-down" : "go-next"

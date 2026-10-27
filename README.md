@@ -8,6 +8,8 @@ A KDE Plasma 6 panel widget to scroll the [Karousel](https://github.com/peterfaj
 | Center dot click | Center the focused window |
 | Mouse wheel down / up | Scroll left / right |
 
+**Compact mode** (optional): a single icon. The mouse wheel scrolls, a click centers the focused window.
+
 **Settings:** scroll speed multiplier (default `1.0`, range `0.1` to `10`). It sets how many Karousel
 scroll steps are triggered per wheel notch or per click. The size of a single step is Karousel's own
 "manual scroll step" setting. The mouse wheel direction can be inverted (arrow buttons are not affected).
