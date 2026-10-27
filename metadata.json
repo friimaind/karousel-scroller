@@ -1,0 +1,22 @@
+{
+    "KPlugin": {
+        "Id": "friimaind.karouselscroller",
+        "Name": "Karousel Scroller",
+        "Description": "Scroll the Karousel tiling grid left and right from the panel by clicking the arrows (hold to keep scrolling) or using the mouse wheel. Click the center dot to center the focused window.",
+        "Icon": "view-split-left-right",
+        "Category": "Windows and Tasks",
+        "License": "GPL-3.0",
+        "Copyright": "© 2026 friimaind",
+        "Version": "1.0.0",
+        "Website": "https://github.com/friimaind/karousel-scroller",
+        "BugReportUrl": "https://github.com/friimaind/karousel-scroller/issues",
+        "Authors": [
+            {
+                "Name": "friimaind",
+                "Website": "https://github.com/friimaind"
+            }
+        ]
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
