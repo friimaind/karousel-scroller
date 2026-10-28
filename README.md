@@ -29,7 +29,7 @@ configurable.
 "Karousel Scroller".
 
 **From a release:** download the `.plasmoid` file from the
-[releases page](https://github.com/friimaind/karousel-scroller/releases), then:
+[releases page](https://store.kde.org/p/2380448/), then:
 
     kpackagetool6 -t Plasma/Applet -i karousel-scroller-<version>.plasmoid
 
