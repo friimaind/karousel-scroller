@@ -2,6 +2,8 @@
 
 A KDE Plasma 6 panel widget to scroll the [Karousel](https://github.com/peterfajdiga/karousel) tiling grid, Pager style.
 
+[friimaind-karousel-scroller-demo-small.webm](https://github.com/user-attachments/assets/2ca0357f-ba39-4481-8c18-9d8742628f9a)
+
 | Control | Action |
 | --- | --- |
 | Left / right arrow click | Scroll left / right (hold to keep scrolling) |
