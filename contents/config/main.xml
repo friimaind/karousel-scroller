@@ -15,6 +15,13 @@
         <entry name="compactMode" type="Bool">
             <default>false</default>
         </entry>
+        <!-- Theme icon name or image file path; empty means the built-in "< • >" glyph -->
+        <entry name="compactIcon" type="String">
+            <default></default>
+        </entry>
+        <entry name="showButtonBackground" type="Bool">
+            <default>true</default>
+        </entry>
         <entry name="widgetLengthPercent" type="Int">
             <default>100</default>
             <min>25</min>

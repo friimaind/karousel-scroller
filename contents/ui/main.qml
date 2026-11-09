@@ -9,6 +9,9 @@ PlasmoidItem {
 
     readonly property bool isVerticalPanel: Plasmoid.formFactor === PlasmaCore.Types.Vertical
     readonly property bool isCompactMode: Plasmoid.configuration.compactMode
+    readonly property string compactIcon: Plasmoid.configuration.compactIcon
+    readonly property bool hasCustomCompactIcon: compactIcon !== ""
+    readonly property bool showButtonBackground: Plasmoid.configuration.showButtonBackground
     readonly property real speedMultiplier: Plasmoid.configuration.scrollSpeedMultiplier
     readonly property int stepsPerClick: Math.max(1, Math.round(speedMultiplier))
     // By default wheel up scrolls right; inverting flips the sign of the wheel delta
@@ -87,6 +90,7 @@ PlasmoidItem {
                 visible: !root.isCompactMode
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                showBackground: root.showButtonBackground
                 iconName: root.isVerticalPanel ? "go-up" : "go-previous"
                 autoRepeat: true
                 onActionRequested: karousel.scrollLeft(root.stepsPerClick)
@@ -101,10 +105,20 @@ PlasmoidItem {
                 Layout.preferredHeight: root.isVerticalPanel ? wheelArea.centerCellLength / root.centerCellAspectRatio : -1
                 Layout.fillWidth: root.isVerticalPanel || root.isCompactMode
                 Layout.fillHeight: !root.isVerticalPanel || root.isCompactMode
-                iconName: "media-record"
-                iconSizeRatio: root.isCompactMode ? 0.75 : 0.35
-                customContent: root.isCompactMode ? compactGlyphComponent : null
+                showBackground: root.showButtonBackground
+                iconName: root.isCompactMode && root.hasCustomCompactIcon ? root.compactIcon : "media-record"
+                iconIsMask: !(root.isCompactMode && root.hasCustomCompactIcon)
+                iconSizeRatio: compactIconSizeRatio()
+                customContent: root.isCompactMode && !root.hasCustomCompactIcon ? compactGlyphComponent : null
                 onActionRequested: karousel.centerFocusedWindow()
+
+                // Without the cell background the icon can use more space, like other panel icons
+                function compactIconSizeRatio() {
+                    if (!root.isCompactMode) {
+                        return 0.35
+                    }
+                    return root.showButtonBackground ? 0.75 : 0.9
+                }
 
                 Component {
                     id: compactGlyphComponent
@@ -121,6 +135,7 @@ PlasmoidItem {
                 visible: !root.isCompactMode
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                showBackground: root.showButtonBackground
                 iconName: root.isVerticalPanel ? "go-down" : "go-next"
                 autoRepeat: true
                 onActionRequested: karousel.scrollRight(root.stepsPerClick)

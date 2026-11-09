@@ -9,6 +9,10 @@ MouseArea {
 
     property alias iconName: buttonIcon.source
     property real iconSizeRatio: 0.6
+    // Monochrome built-in icons are tinted with the text color; user-chosen icons keep their own colors
+    property bool iconIsMask: true
+    // When false the cell is drawn only on hover/press, like a plain panel icon
+    property bool showBackground: true
     // Optional item drawn instead of the theme icon (e.g. a custom glyph)
     property Component customContent: null
 
@@ -58,7 +62,20 @@ MouseArea {
         if (containsMouse) {
             return withOpacity(Kirigami.Theme.highlightColor, hoverFillOpacity)
         }
+        if (!showBackground) {
+            return "transparent"
+        }
         return withOpacity(Kirigami.Theme.textColor, idleFillOpacity)
+    }
+
+    function currentBorderColor() {
+        if (containsMouse) {
+            return Kirigami.Theme.highlightColor
+        }
+        if (!showBackground) {
+            return "transparent"
+        }
+        return withOpacity(Kirigami.Theme.textColor, idleBorderOpacity)
     }
 
     Timer {
@@ -78,9 +95,7 @@ MouseArea {
         radius: Kirigami.Units.cornerRadius / 2
         color: button.currentFillColor()
         border.width: 1
-        border.color: button.containsMouse
-            ? Kirigami.Theme.highlightColor
-            : button.withOpacity(Kirigami.Theme.textColor, button.idleBorderOpacity)
+        border.color: button.currentBorderColor()
     }
 
     Kirigami.Icon {
@@ -91,7 +106,7 @@ MouseArea {
         width: button.contentSize
         height: width
         color: button.contentColor
-        isMask: true
+        isMask: button.iconIsMask
     }
 
     Loader {

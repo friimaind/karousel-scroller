@@ -3,6 +3,7 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
+import org.kde.iconthemes as KIconThemes
 
 KCM.SimpleKCM {
     id: page
@@ -14,6 +15,10 @@ KCM.SimpleKCM {
     property bool cfg_invertWheelDirectionDefault
     property alias cfg_compactMode: compactModeCheckBox.checked
     property bool cfg_compactModeDefault
+    property string cfg_compactIcon
+    property string cfg_compactIconDefault
+    property alias cfg_showButtonBackground: showBackgroundCheckBox.checked
+    property bool cfg_showButtonBackgroundDefault
     property alias cfg_widgetLengthPercent: lengthSpinBox.value
     property int cfg_widgetLengthPercentDefault
     property alias cfg_widgetThicknessPercent: thicknessSpinBox.value
@@ -90,6 +95,87 @@ KCM.SimpleKCM {
             wrapMode: Text.Wrap
             font: Kirigami.Theme.smallFont
             text: i18n("Shows a single button: the mouse wheel scrolls, a click centers the focused window.")
+        }
+
+        QQC2.Button {
+            id: compactIconButton
+
+            readonly property int previewSize: Kirigami.Units.iconSizes.large
+            readonly property bool hasCustomIcon: page.cfg_compactIcon !== ""
+
+            Kirigami.FormData.label: i18n("Compact icon:")
+            enabled: compactModeCheckBox.checked
+            implicitWidth: previewSize + Kirigami.Units.largeSpacing * 2
+            implicitHeight: implicitWidth
+            Accessible.name: i18n("Choose the compact mode icon")
+
+            onClicked: compactIconMenu.opened ? compactIconMenu.close() : compactIconMenu.open()
+
+            Kirigami.Icon {
+                visible: compactIconButton.hasCustomIcon
+                anchors.centerIn: parent
+                width: compactIconButton.previewSize
+                height: width
+                source: page.cfg_compactIcon
+            }
+
+            CompactGlyph {
+                visible: !compactIconButton.hasCustomIcon
+                anchors.centerIn: parent
+                width: compactIconButton.previewSize
+                height: width * heightToWidthRatio
+                color: Kirigami.Theme.textColor
+            }
+
+            KIconThemes.IconDialog {
+                id: compactIconDialog
+
+                onIconNameChanged: {
+                    if (iconName !== "") {
+                        page.cfg_compactIcon = iconName
+                    }
+                }
+            }
+
+            QQC2.Menu {
+                id: compactIconMenu
+
+                y: compactIconButton.height
+
+                QQC2.MenuItem {
+                    text: i18n("Choose…")
+                    icon.name: "document-open-folder"
+                    onClicked: compactIconDialog.open()
+                }
+
+                QQC2.MenuItem {
+                    text: i18n("Reset to default (< • >)")
+                    icon.name: "edit-clear"
+                    enabled: compactIconButton.hasCustomIcon
+                    onClicked: page.cfg_compactIcon = ""
+                }
+            }
+        }
+
+        QQC2.Label {
+            Layout.fillWidth: true
+            wrapMode: Text.Wrap
+            font: Kirigami.Theme.smallFont
+            text: i18n("Pick an icon from your icon theme or an image file (PNG, SVG) to match the rest of your panel.")
+        }
+
+        QQC2.CheckBox {
+            id: showBackgroundCheckBox
+
+            Kirigami.FormData.label: i18n("Appearance:")
+            text: i18n("Show button background")
+        }
+
+        QQC2.Label {
+            Layout.fillWidth: true
+            wrapMode: Text.Wrap
+            font: Kirigami.Theme.smallFont
+            text: i18n("When disabled, buttons look like plain panel icons and are highlighted only on hover.")
         }
 
         PercentSpinBox {
